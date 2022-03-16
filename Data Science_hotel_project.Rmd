@@ -1,0 +1,225 @@
+---
+title: "Project"
+author: "Pranav Sharma"
+date: "14/10/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+hotels<- read.csv("https://intro-datascience.s3.us-east-2.amazonaws.com/Resort01.csv")
+hotels<- data.frame(hotels)
+```
+
+```{r} 
+view(hotels)
+```
+
+```{r}
+str(hotels)
+```
+
+```{r}
+summary(hotels)
+```
+
+```{r}
+sum(is.na(hotels$LeadTime))
+sum(is.na(hotels$StaysInWeekendNights))
+sum(is.na(hotels$StaysInWeekNights))
+sum(is.na(hotels$Adults))
+sum(is.na(hotels$Adults))
+sum(is.na(hotels$Children))
+sum(is.na(hotels$Babies))
+sum(is.na(hotels$Meal))
+sum(is.na(hotels$Country))
+sum(is.na(hotels$MarketSegment))
+sum(is.na(hotels$IsRepeatedGuest))
+sum(is.na(hotels$PreviousCancellations))
+sum(is.na(hotels$PreviousBookingsNotCanceled))
+sum(is.na(hotels$ReservedRoomType))
+sum(is.na(hotels$AssignedRoomType))
+sum(is.na(hotels$BookingChanges))
+sum(is.na(hotels$DepositType))
+sum(is.na(hotels$CustomerType))
+sum(is.na(hotels$RequiredCarParkingSpaces))
+sum(is.na(hotels$TotalOfSpecialRequests))
+#no null values
+```
+
+
+```{r}
+subset(hotels, AssignedRoomType!= ReservedRoomType)
+#7725 bookings found where assigned room type is not equals to the reserved room type
+```
+
+
+
+```{r}
+subset(hotels, IsCanceled==1)
+#11122 cancelled bookings
+```
+
+```{r}
+subset(hotels, IsCanceled==1 & AssignedRoomType!= ReservedRoomType)
+#11122 cancelled bookings
+#384 cancelled bookings found where assigned room type is not same as reserved room type
+subset(hotels, IsCanceled==1 & Country=="PRT")
+#7438 cancellations
+```
+
+```{r}
+#Among 11122 cancellations, 7438 is from country 'PRT'
+```
+Doing Analysis based on the barplots 
+Producing tables of categorical response variables is often helpful.
+Barplots of cancelations across different categories is often useful.
+
+```{r}
+newDF_cancelled <- hotels[hotels$IsCanceled==1,]
+nrow(newDF_cancelled)
+```
+
+```{r}
+# COLUMN NOT REQUIRED for analysis of cancellation, no distinct measure shows up 
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$StaysInWeekendNights)
+
+# COLUMN NOT REQUIRED for analysis of cancellation, no distinct measure shows up 
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$LeadTime)
+
+# COLUMN NOT REQUIRED for analysis of cancellation, no distinct measure shows up 
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$StaysInWeekNights)
+
+# bookings with 2 adults often tend to get cancelled more frequently , around 75 percent of the times in respect to bookings made where there were 1 or 3 adults
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$Adults)
+
+# Guests who have children hardly cancel but there cancel rate is higher than with babies
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$Children)
+
+# Guests who have babies hardly cancel.
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$Babies)
+
+# only 1 percent of the repeated guests cancel on the hotels. 
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$IsRepeatedGuest)
+
+# People with Meal SC and FB hardly cancel whereas people taking BB meals cancel 80 percent of the times
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$Meal)
+
+# COLUMN NOT REQUIRED for analysis
+
+# there is only one country from where bookings are cancelled the most. While we can also infer that most of the bookings are made from this country. Thus this is not an effective measure to find out the probability of cancellation. 
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$Country)
+
+# the market segment which comprises of online TA is responsible for most of the cancellations. Bookings made through groups are second is this respect
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$MarketSegment)
+
+# COLUMN NOT REQUIRED for analysis
+
+# We cannot use this as a measure to identify potential risk of someone cancelling their booking. Since 99 percent of people had never cancelled their bookings in the hotels before
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$PreviousCancellations)
+
+# COLUMN NOT REQUIRED for analysis
+
+# We cannot use this as a measure to identify potential risk of someone cancelling their booking. Since 99 percent of people had never cancelled their bookings in the hotels before
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$PreviousBookingsNotCanceled)
+
+# people assigned with room type A has seen most of the cancellations. To avoid cancellations , people who are identified as high risk cancel probability should be assigned room type B if possible and not A
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$ReservedRoomType)
+
+# people assigned with room type A has seen most of the cancellations. To avoid cancellations , people who are identified as high risk cancel probability should be assigned room type B if possible and not A
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$AssignedRoomType)
+
+# most people directly cancel there plans. But some have to change their bookings to accomodate their plan to stay in the hotels. If that is not possible then they cancel their bookings
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$BookingChanges)
+
+# when booking made with no deposit
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$DepositType)
+
+# transient customers are the types who are cancelling the booking the most
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$CustomerType)
+
+# people who cancelled their bookings do not ask for a parking space in advance.
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$RequiredCarParkingSpaces)
+
+# people with 0 special requests tend to cancel their bookings. We should be sure the booking won't be cancelled if the number of special requests is more than 4
+plotyplot <-  ggplot(newDF_cancelled) + geom_bar(data=newDF_cancelled)+ aes(x= newDF_cancelled$TotalOfSpecialRequests)
+installr
+
+```
+Actionable Insights:
+1) While selecting Room type either reserved or assigned room type , avoid giving room type A to people show  patterns of high cancellations risk.
+2) Try incorporating a structure where deposit amount is compulsory because most of the people cancelled had no deposit
+3) When people make an effort to change their bookings greet them with more importance because it shows inclination towards coming to stay in the hotels. Which means there is less chance of cancellation
+4) Make an effort to get special requests from the customers, to be very safe , atleast 4 or more. Customers making special requests hardly cancel their bookings
+5) Always ask for parking space from the customer prior to the booking. Reserving parking space for the customers will lead to reduction in cancellation.
+6) The above 5 points should be focussed especially more on the market segment "Online TA" which is responsible for most of the cancellations
+7) Special care of the first 5 points should be given to transient customers as they cancel more than other type of customers
+8) Customers who are families especially who have children and babies would hardly cancel bookings in your hotels, focus on customers in groups of 2.
+```{r}
+plotyplot
+
+```
+
+```{r}
+cancellation_factor_dataframe <- data.frame(num_adults=as.factor(newDF_cancelled$Adults),                                    is_baby = as.factor(newDF_cancelled$Babies>0),
+                           are_children = as.factor(newDF_cancelled$Children>0),
+                           meal = as.factor(newDF_cancelled$Meal),                         market_segment=as.factor(newDF_cancelled$MarketSegment),
+                           isRepeatedGuest=as.factor(newDF_cancelled$IsRepeatedGuest),
+                          reserved_room_type =as.factor(newDF_cancelled$ReservedRoomType),
+                          assigned_room_type =as.factor(newDF_cancelled$AssignedRoomType),
+                           deposit_type=as.factor(newDF_cancelled$DepositType),
+                           customer_type=as.factor(newDF_cancelled$CustomerType),
+                           is_parking_space=as.factor(newDF_cancelled$RequiredCarParkingSpaces>0),
+                           num_special_requests=as.factor(newDF_cancelled$TotalOfSpecialRequests))
+```
+
+```{r}
+
+factor_dataframe <- data.frame(num_adults=as.factor(hotels$Adults),                                    is_baby = as.factor(hotels$Babies>0),
+                           is_cancelled =  as.factor(hotels$IsCanceled),
+                           are_children = as.factor(hotels$Children>0),
+                           meal = as.factor(hotels$Meal),                         market_segment=as.factor(hotels$MarketSegment),
+                           isRepeatedGuest=as.factor(hotels$IsRepeatedGuest),
+                          reserved_room_type =as.factor(hotels$ReservedRoomType),
+                          assigned_room_type =as.factor(hotels$AssignedRoomType),
+                           deposit_type=as.factor(hotels$DepositType),
+                           customer_type=as.factor(hotels$CustomerType),
+                           is_parking_space=as.factor(hotels$RequiredCarParkingSpaces>0),
+                           num_special_requests=as.factor(hotels$TotalOfSpecialRequests))
+
+```
+
+```{r}
+# With associative mining , defining rules for when cancellation occurs
+# convertion into transaction martix
+
+
+cancellation_factor_transactions <- as(cancellation_factor_dataframe,"transactions")
+summary(cancellation_factor_transactions)
+
+hotels_transaction <- as(factor_dataframe,"transactions")
+str(hotels_transaction)
+```
+
+```{r}
+rules<-apriori(hotels_transaction,list(supp= 0.0399, conf = 0.9),
+                             control=list(verbose=F),
+                             appearance = list(default="lhs",rhs=("is_cancelled=1")))
+
+inspect(rules)
+```
+
+```{r}
+rules_newest<-apriori(hotels_transaction,list(supp= 0.0399, conf = 0.9),
+                             control=list(verbose=F),
+                             appearance = list(default=("lhs"),rhs=("is_cancelled=1")))
+```
+
+
+
+
+
+
+
